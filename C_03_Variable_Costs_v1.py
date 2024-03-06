@@ -91,16 +91,17 @@ variable_frame = pandas.DataFrame(variable_dict)
 variable_frame = variable_frame.set_index('Item')
 
 # Calculate cost of each component
-variable_frame['Cost'] = variable_frame['Quantity'] * variable_frame['price']
+variable_frame['Cost'] = variable_frame['Quantity'] * variable_frame['Price']
 
 # Find sub-total
 variable_sub = variable_frame['Cost'].sum()
 
 # Currency formatting (uses currency function)
-add_dollars = ['price', 'cost']
+add_dollars = ['Price', 'Cost']
 for item in add_dollars:
     variable_frame[item] = variable_frame[item].apply(currency)
 
 # Printing area
 print(variable_frame)
 print()
+print(f"Variable Costs: ${variable_sub:.2f}")
