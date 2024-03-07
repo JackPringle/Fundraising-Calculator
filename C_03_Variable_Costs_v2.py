@@ -110,6 +110,7 @@ def get_expenses(var_fixed):
 # Get product name
 product_name = not_blank("Product name: ", "The product name can't be blank.")
 
+# Get variable costs
 variable_expenses = get_expenses("variable")
 variable_frame = variable_expenses[0]
 variable_sub = variable_expenses[1]
