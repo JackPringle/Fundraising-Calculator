@@ -1,4 +1,5 @@
 import pandas
+import math
 
 
 # Functions...
@@ -137,6 +138,77 @@ def expense_print(heading, frame, subtotal):
     return
 
 
+# Calculates profit target and total sales based on expenses
+def profit_goal(total_costs):
+    # Initialise variables and error message
+    error = "Please enter a valid profit goal\n"
+
+    valid = False
+    while not valid:
+
+        # Ask for profit goal...
+        response = input("What is your profit goal (eg $500 or 50%)")
+
+        # Check if first character is $...
+        if response[0] == "$":
+            profit_type = "$"
+
+            # Get amount (everything after the $)
+            amount = response[1:]
+
+        # Check if the last character is %
+        elif response[-1] == "%":
+            profit_type = "%"
+
+            # Get amount (everything before the %)
+            amount = response[:-1]
+
+        else:
+            # Set response to amount for now
+            profit_type = "unknown"
+            amount = response
+
+        try:
+            # Check amount is a number more than zero...
+            amount = float(amount)
+            if amount <= 0:
+                print(error)
+                continue
+
+        except ValueError:
+            print(error)
+            continue
+
+        if profit_type == "unknown" and amount >= 100:
+            dollar_type = yes_no(f"Do you mean ${amount:.2f}. ie {amount:.2f} dollars? , y / n ")
+
+            # Set profit type based on user answer above
+            if dollar_type == "yes":
+                profit_type = "$"
+            else:
+                profit_type = "%"
+
+        elif profit_type == "unknown" and amount < 100:
+            percent_type = yes_no(f"Do you mean {amount}%? , y / n ")
+
+            if percent_type == "yes":
+                profit_type = "%"
+            else:
+                profit_type = "$"
+
+        # Return profit goal to main routine
+        if profit_type == "$":
+            return amount
+        else:
+            goal = (amount / 100) * total_costs
+            return goal
+
+
+# Rounding function
+def round_up(amount, var_round_to):
+    return int(math.ceil(amount / var_round_to)) * var_round_to
+
+
 # Main Routine...
 
 # Get product name
@@ -161,11 +233,12 @@ else:
     fixed_sub = 0
     fixed_frame = ""
 
-# Find total costs
-
-# Ask user for profit goal
+# Work out total costs and profit target
+all_costs = variable_sub + fixed_sub
+profit_target = profit_goal(all_costs)
 
 # Calculate recommended price
+selling_price = 0
 
 # Write data to file
 
@@ -178,3 +251,12 @@ expense_print("Variable", variable_frame, variable_sub)
 
 if have_fixed == "yes":
     expense_print("Fixed", fixed_frame, fixed_sub)
+
+print()
+print("**** Profit & Sales Targets ****")
+print(f"Profit Target: ${profit_target:.2f}")
+print(f"Total Sales: ${all_costs + profit_target:.2f}")
+
+print()
+print(f"**** Recommended Selling Price: ${selling_price:.2f}")
+print()
