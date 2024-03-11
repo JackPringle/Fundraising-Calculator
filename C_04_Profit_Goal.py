@@ -2,7 +2,6 @@
 
 # Yes / No Checker function
 def yes_no(question):
-
     # Check for yes or no
     to_check = ["yes", "no"]
 
@@ -23,8 +22,8 @@ def yes_no(question):
         print("Please enter either yes or no...\n")
 
 
+# Calculates profit target and total sales based on expenses
 def profit_goal(total_costs):
-
     # Initialise variables and error message
     error = "Please enter a valid profit goal\n"
 
