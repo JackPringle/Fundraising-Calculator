@@ -212,26 +212,11 @@ def round_up(amount, var_round_to):
 # Main Routine...
 
 # Get product name
+product_name = not_blank("Product name: ", "The product name can't be blank.")
+
+# Get how many items they plan to make
 how_many = num_check("How many items will you be producing? ", "The number of items must be a whole number more than "
                                                                "zero", int)
-
-# Get values
-total = num_check("Total costs? ", "More than 0", float)
-profit_goal = num_check("Profit Goal? ", "More than 0", float)
-round_to = num_check("Round to nearest...? ", "Can't be 0", int)
-
-sales_needed = total + profit_goal
-print(f"Total: ${total:.2f}")
-print(f"Profit Goal: ${profit_goal:.2f}")
-
-selling_price = sales_needed / how_many
-print(f"Selling Price (unrounded): ${selling_price:.2f}")
-
-recommended_price = round_up(selling_price, round_to)
-print(f"Recommended Price: ${recommended_price:.2f}")
-
-# Get product name
-product_name = not_blank("Product name: ", "The product name can't be blank.")
 
 print()
 print("Please enter your variable costs below...")
@@ -256,8 +241,15 @@ else:
 all_costs = variable_sub + fixed_sub
 profit_target = profit_goal(all_costs)
 
+# Calculates total sales needed to reach goal
+sales_needed = all_costs + profit_target
+
+# Ask user for rounding
+round_to = num_check("Round to nearest...? ", "Can't be 0", int)
+
 # Calculate recommended price
-selling_price = 0
+selling_price = sales_needed / how_many
+recommended_price = round_up(selling_price, round_to)
 
 # Write data to file
 
@@ -272,10 +264,16 @@ if have_fixed == "yes":
     expense_print("Fixed", fixed_frame, fixed_sub)
 
 print()
+print(f"**** Total Costs: ${all_costs:.2f} ****")
+print()
+
+print()
 print("**** Profit & Sales Targets ****")
 print(f"Profit Target: ${profit_target:.2f}")
 print(f"Total Sales: ${all_costs + profit_target:.2f}")
 
 print()
-print(f"**** Recommended Selling Price: ${selling_price:.2f}")
+print("**** Pricing ****")
+print(f"Minimum Price: ${selling_price:.2f}")
+print(f"Recommended Price: ${recommended_price:.2f}")
 print()
