@@ -209,7 +209,38 @@ def round_up(amount, var_round_to):
     return int(math.ceil(amount / var_round_to)) * var_round_to
 
 
+# Contains instructions
+def instructions():
+    print('''
+ℹℹℹ Instructions ℹℹℹ
+
+This program will ask you for...
+- The name of the product you are selling
+- How many items you plan on selling
+- the costs for each component of the product
+- How much money you want to make
+
+It will then output an itemised list of the costs 
+with subtotals for the variable and fixed costs.
+Finally it will tell you how much you should sell 
+each item for to reach your profit goal. 
+
+The data will also be written to a text file which 
+has the same name as your product.
+
+**** Program Launched! ****
+
+    ''')
+
+
 # Main Routine...
+
+# Ask the user if they need instructions
+want_help = yes_no("Do you want to read the instructions? ")
+
+# If user wants instructions, display them
+if want_help == "yes":
+    instructions()
 
 # Get product name
 product_name = not_blank("Product name: ", "The product name can't be blank.")
@@ -251,39 +282,68 @@ round_to = num_check("Round to nearest...? ", "Can't be 0", int)
 selling_price = sales_needed / how_many
 recommended_price = round_up(selling_price, round_to)
 
-# Strings area
+# **** Strings area ****
 
-print()
+# Heading
 product_heading = f"**** Fund Raising - {product_name} ****\n"
-print()
+
+
 variable_strings = expense_string("Variable", variable_frame, variable_sub)
 variable_heading = variable_strings[0]
 variable_frame_txt = variable_strings[1]
 variable_sub_total = variable_strings[2]
 
 if have_fixed == "yes":
-    expense_string("Fixed", fixed_frame, fixed_sub)
+    fixed_string = expense_string("Fixed", fixed_frame, fixed_sub)
 
-# print()
+    # Fixed cost area
+    fixed_heading = fixed_string[0]
+    fixed_frame_txt = fixed_string[1]
+    fixed_sub_total = fixed_string[2]
+
+else:
+    fixed_heading = ""
+    fixed_frame_txt = ""
+    fixed_sub_total = ""
+
+
+# Variable cost area
 total_costs_txt = f"**** Total Costs: ${all_costs:.2f} ****\n"
-# print()
-#
-# print()
 targets_heading = "**** Profit & Sales Targets ****"
-profit_target_tx = f"Profit Target: ${profit_target:.2f}"
-# print(f"Total Sales: ${all_costs + profit_target:.2f}\n\n")
-#
-# print()
-# print("**** Pricing ****")
-# print(f"Minimum Price: ${selling_price:.2f}")
-# print(f"Recommended Price: ${recommended_price:.2f}")
-# print()
+profit_target_txt = f"Profit Target: ${profit_target:.2f}"
+total_sales_txt = f"Total Sales: ${all_costs + profit_target:.2f}\n\n"
 
-to_output_list = [product_heading, variable_heading,
-                  variable_frame, variable_sub, total_costs_txt,
-                  targets_heading, profit_target_tx]
+# Pricing area
+pricing_heading = "**** Pricing ****\n"
+minimum_price_txt = f"Minimum Price: ${selling_price:.2f}"
+recommended_price_txt = f"Recommended Price: ${recommended_price:.2f}\n"
+
+# Create a list of the things that need to be written to file
+to_output_list = [product_heading,
+                  variable_heading, variable_frame_txt, variable_sub_total,
+                  fixed_heading, fixed_frame_txt, fixed_sub_total,
+                  total_costs_txt, targets_heading, profit_target_txt, total_sales_txt,
+                  pricing_heading,
+                  minimum_price_txt, recommended_price_txt]
 
 for item in to_output_list:
     print(item)
 
-# Write data to file (and print)
+
+# Write to file...
+# Create file to hold data (add .txt extension)
+file_name = f"{product_name}.txt"
+text_file = open(file_name, "w+")
+
+# Heading
+for item in to_output_list:
+    text_file.write(item)
+    text_file.write("\n")
+
+# Close file
+text_file.close()
+
+# Print stuff
+for item in to_output_list:
+    print(item)
+    print()
