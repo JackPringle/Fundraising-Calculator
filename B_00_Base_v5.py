@@ -132,7 +132,7 @@ def get_expenses(var_fixed):
 def expense_string(heading, frame, subtotal):
     print()
     expense_heading = f"**** {heading} Costs ****"
-    frame_txt = ""
+    frame_txt = pandas.DataFrame.to_string(frame)
     expense_sub_string = f"{heading} Costs: ${subtotal:.2f}\n"
 
     return expense_heading, frame_txt, expense_sub_string
@@ -343,7 +343,3 @@ for item in to_output_list:
 # Close file
 text_file.close()
 
-# Print stuff
-for item in to_output_list:
-    print(item)
-    print()
